@@ -1,0 +1,10 @@
+.git
+.github
+*.md
+.gitignore
+.env
+.env.*
+node_modules
+vendor
+.DS_Store
+Thumbs.db
