@@ -1,6 +1,8 @@
 # Laravel Installer Docker Image
 
-Docker image with Laravel installer pre-installed for creating new Laravel projects.
+🚀 **Self-updating** Docker image with Laravel installer pre-installed for creating new Laravel projects.
+
+> This image automatically updates every hour when new Laravel installer versions are released.
 
 ## Usage
 
@@ -13,26 +15,26 @@ docker pull ghcr.io/prvious/laravel-new
 ### Create a new Laravel project
 
 ```bash
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example
 ```
 
 ### With additional options
 
 ```bash
 # With pnpm
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project --pnpm
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --pnpm
 
 # With database
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project --database=mysql
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --database=mysql
 
 # Combined options
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project --pnpm --database=pgsql --git
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --pnpm --database=pgsql --git
 
 # With Breeze starter kit
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project --breeze
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --breeze
 
 # All Laravel new options are supported
-docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new my-project --jet --stack=livewire --teams
+docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --jet --stack=livewire --teams
 ```
 
 ## Building Locally
@@ -47,12 +49,14 @@ docker run --rm -v $(pwd):/app laravel-installer my-project
 -   ✅ Based on official Composer image
 -   ✅ Laravel installer pre-installed globally
 -   ✅ Pass-through all `laravel new` arguments
--   ✅ Automatic builds via GitHub Actions
+-   ✅ **Auto-updating**: Checks for new Laravel installer versions every 6 hours
+-   ✅ **Smart builds**: Only pushes when there's a new version
+-   ✅ **Auto-releases**: GitHub releases created automatically with Laravel changelogs
 -   ✅ Published to GitHub Container Registry (GHCR)
 
 ## Available Tags
 
--   `latest` - Latest stable build with current Laravel installer version
+-   `latest` - Always the newest Laravel installer version (auto-updated)
 -   `5.21.0` - Specific Laravel installer version (e.g., 5.21.0)
 -   `v5.21.0` - Specific Laravel installer version with 'v' prefix
 -   `main` - Latest build from main branch
@@ -66,7 +70,7 @@ docker run --rm -v $(pwd):/app laravel-installer my-project
 ## Example Output
 
 ```bash
-$ docker run --rm -v $(pwd):/app ghcr.io/username/laravel-new my-app --pnpm
+$ docker run --rm -v $(pwd):/app ghcr.io/prvious/laravel-new example --pnpm
 
    _                               _
   | |                             | |
