@@ -46,13 +46,14 @@ docker run --rm -v $(pwd):/app laravel-installer my-project
 
 ## Features
 
--   ✅ Based on official Composer image
--   ✅ Laravel installer pre-installed globally
--   ✅ Pass-through all `laravel new` arguments
--   ✅ **Auto-updating**: Checks for new Laravel installer versions every 6 hours
--   ✅ **Smart builds**: Only pushes when there's a new version
--   ✅ **Auto-releases**: GitHub releases created automatically with Laravel changelogs
--   ✅ Published to GitHub Container Registry (GHCR)
+-   🍆 Based on official Composer image
+-   🍆 Laravel installer pre-installed globally
+-   🍆 **Multi-architecture**: Supports AMD64 (Intel/AMD) and ARM64 (Apple Silicon)
+-   🍆 Pass-through all `laravel new` arguments
+-   🍆 **Auto-updating**: Checks for new Laravel installer versions every 6 hours
+-   🍆 **Smart builds**: Only pushes when there's a new version
+-   🍆 **Auto-releases**: GitHub releases created automatically with Laravel changelogs
+-   🍆 Published to GitHub Container Registry (GHCR)
 
 ## Available Tags
 
@@ -61,6 +62,13 @@ docker run --rm -v $(pwd):/app laravel-installer my-project
 -   `v5.21.0` - Specific Laravel installer version with 'v' prefix
 -   `main` - Latest build from main branch
 -   `sha-abc123` - Specific commit builds
+
+## Supported Architectures
+
+This image supports multiple architectures and Docker will automatically pull the correct version for your platform:
+
+-   `linux/amd64` - Intel/AMD processors (x86_64)
+-   `linux/arm64` - ARM processors (Apple Silicon M1/M2/M3/M4, AWS Graviton, Raspberry Pi 4+)
 
 ## Requirements
 
