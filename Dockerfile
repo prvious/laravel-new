@@ -1,5 +1,8 @@
 FROM composer:latest
 
+# Build argument for Laravel installer version (invalidates cache when changed)
+ARG VERSION
+
 # Install Laravel installer globally
 RUN composer global require laravel/installer
 
