@@ -96,6 +96,8 @@ jobs:
                   push: ${{ steps.version-check.outputs.should_push == 'true' && github.event_name != 'pull_request' }}
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
+                  build-args: |
+                      VERSION=${{ steps.laravel-version.outputs.version }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
 
