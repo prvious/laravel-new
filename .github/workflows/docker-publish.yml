@@ -101,7 +101,7 @@ jobs:
               with:
                   images: |
                       ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-                      prvious/laravel-new
+                      ${{ env.IMAGE_NAME }}
                   tags: |
                       type=raw,value=latest,enable=${{ steps.version-check.outputs.should_push == 'true' && github.event_name != 'pull_request' }}
                       type=raw,value=${{ steps.laravel-version.outputs.version }},enable=${{ steps.version-check.outputs.should_push == 'true' && github.event_name != 'pull_request' }}
