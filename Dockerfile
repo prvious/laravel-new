@@ -1,6 +1,7 @@
 FROM composer:latest AS composer
 
 FROM php:8.4-alpine
+ENV COMPOSER_HOME=/tmp
 
 # Build argument for Laravel installer version (invalidates cache when changed)
 ARG VERSION
