@@ -48,12 +48,26 @@ jobs:
               id: version-check
               run: |
                   # Check if tag exists in GHCR using Docker manifest
+                  GHCR_EXISTS=false
+                  DOCKER_HUB_EXISTS=false
+                  
                   if docker manifest inspect ghcr.io/${{ github.repository }}:${{ steps.laravel-version.outputs.version }} >/dev/null 2>&1; then
                     echo "Version ${{ steps.laravel-version.outputs.version }} already exists in GHCR"
-                    echo "should_push=false" >> $GITHUB_OUTPUT
-                  else
-                    echo "New version ${{ steps.laravel-version.outputs.version }} detected"
+                    GHCR_EXISTS=true
+                  fi
+                  
+                  if docker manifest inspect prvious/laravel-new:${{ steps.laravel-version.outputs.version }} >/dev/null 2>&1; then
+                    echo "Version ${{ steps.laravel-version.outputs.version }} already exists in Docker Hub"
+                    DOCKER_HUB_EXISTS=true
+                  fi
+                  
+                  # Push if version doesn't exist in either registry
+                  if [[ "$GHCR_EXISTS" == "false" || "$DOCKER_HUB_EXISTS" == "false" ]]; then
+                    echo "New version ${{ steps.laravel-version.outputs.version }} detected in at least one registry"
                     echo "should_push=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Version ${{ steps.laravel-version.outputs.version }} already exists in both registries"
+                    echo "should_push=false" >> $GITHUB_OUTPUT
                   fi
 
                   # Always push on manual push to main branch
@@ -68,18 +82,26 @@ jobs:
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
 
-            - name: Log in to Container Registry
+            - name: Log in to GitHub Container Registry
               uses: docker/login-action@v3
               with:
                   registry: ${{ env.REGISTRY }}
                   username: ${{ github.actor }}
                   password: ${{ secrets.GITHUB_TOKEN }}
 
+            - name: Log in to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: prvious
+                  password: ${{ secrets.DOCKER_TOKEN }}
+
             - name: Extract metadata
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  images: |
+                      ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                      prvious/laravel-new
                   tags: |
                       type=raw,value=latest,enable=${{ steps.version-check.outputs.should_push == 'true' && github.event_name != 'pull_request' }}
                       type=raw,value=${{ steps.laravel-version.outputs.version }},enable=${{ steps.version-check.outputs.should_push == 'true' && github.event_name != 'pull_request' }}
@@ -130,9 +152,17 @@ jobs:
                       ${{ steps.laravel-version.outputs.release_body }}
 
                       ### Usage
+                      
+                      **From GitHub Container Registry:**
                       ```bash
                       docker pull ghcr.io/${{ github.repository }}:${{ steps.laravel-version.outputs.version }}
                       docker run --rm -v $(pwd):/app ghcr.io/${{ github.repository }}:${{ steps.laravel-version.outputs.version }} my-project
+                      ```
+                      
+                      **From Docker Hub:**
+                      ```bash
+                      docker pull prvious/laravel-new:${{ steps.laravel-version.outputs.version }}
+                      docker run --rm -v $(pwd):/app prvious/laravel-new:${{ steps.laravel-version.outputs.version }} my-project
                       ```
 
                       🔗 [View Laravel Installer Release](${{ steps.laravel-version.outputs.release_url }})
