@@ -1,13 +1,16 @@
-FROM composer:latest
+FROM composer:latest AS composer
+
+FROM php:8.4-alpine
 
 # Build argument for Laravel installer version (invalidates cache when changed)
 ARG VERSION
-
-# Install Laravel installer globally
-RUN composer global require laravel/installer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Add composer global bin to PATH
 ENV PATH="${PATH}:/tmp/vendor/bin"
+
+# Install Laravel installer globally
+RUN composer global require laravel/installer
 
 # Set working directory
 WORKDIR /app
